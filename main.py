@@ -19,22 +19,38 @@ app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
 
 @app.event("message")
 def handle_message_events(body, say, logger):
-    print('got in the event specific handler')
-
-    print(body['event']['text'])
+    print('mensagem: ', body['event']['text'])
     message = body['event']['text']
 
     if 'hello' in message:
-        say(f"Hey there <@{body['event']['user']}>!")
+        say(
+            blocks=[
+                {
+                    "type": "section",
+                    "text": {"type": "mrkdwn", "text": f"Hey there <@{body['event']['user']}>!"},
+                    "accessory": {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "Click Me"},
+                        "action_id": "button_click"
+                    }
+                }
+            ],
+            text=f"Hey there <@{body['event']['user']}>!"
+        )
 
 
-# @app.message("hello")
-# def message_hello(message, say):
-#     print('got in this handler')
-#     print(message)
-#     # say() sends a message to the channel where the event was triggered
-
-#     say(f"Hey there <@{message['user']}>!")
+@app.action("button_click")
+def handle_button_click(ack, body, say):
+    ack()
+    say(
+        blocks=[
+            {
+                "type": "section",
+                "text": {"type": "mrkdwn", "text": f"Button clicked by <@{body['user']['id']}>!"}
+            }
+        ],
+        text=f"Button clicked by <@{body['user']['id']}>!"
+    )
 
 
 # Start your app
