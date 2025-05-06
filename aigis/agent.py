@@ -16,7 +16,7 @@ root_agent = Agent(
         You can use the create_ticket tool to create Jira tasks.
         ALWAYS provide name, summary and description to the tool.
         IF you detect a request being made that could become a Jira task, create a Jira task for it and respond ONLY with SUCCESS
-        ELSE respond ONLY with the error message returned
+        ELSE respond ONLY with IGNORED
         """
     ),
     tools=[create_ticket],
