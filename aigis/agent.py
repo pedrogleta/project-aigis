@@ -1,6 +1,7 @@
 import datetime
 from zoneinfo import ZoneInfo
 from google.adk.agents import Agent
+from opik.integrations.adk import OpikTracer
 
 
 def get_weather(city: str) -> dict:
@@ -55,6 +56,8 @@ def get_current_time(city: str) -> dict:
     return {"status": "success", "report": report}
 
 
+opik_tracer = OpikTracer()
+
 root_agent = Agent(
     name="weather_time_agent",
     model="gemini-2.0-flash",
@@ -65,4 +68,10 @@ root_agent = Agent(
         "You are a helpful agent who can answer user questions about the time and weather in a city."
     ),
     tools=[get_weather, get_current_time],
+    before_agent_callback=opik_tracer.before_agent_callback,
+    after_agent_callback=opik_tracer.after_agent_callback,
+    before_model_callback=opik_tracer.before_model_callback,
+    after_model_callback=opik_tracer.after_model_callback,
+    before_tool_callback=opik_tracer.before_tool_callback,
+    after_tool_callback=opik_tracer.after_tool_callback
 )
