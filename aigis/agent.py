@@ -1,73 +1,24 @@
-import datetime
-from zoneinfo import ZoneInfo
 from google.adk.agents import Agent
 from opik.integrations.adk import OpikTracer
-
-
-def get_weather(city: str) -> dict:
-    """Retrieves the current weather report for a specified city.
-
-    Args:
-        city (str): The name of the city for which to retrieve the weather report.
-
-    Returns:
-        dict: status and result or error msg.
-    """
-    if city.lower() == "new york":
-        return {
-            "status": "success",
-            "report": (
-                "The weather in New York is sunny with a temperature of 25 degrees"
-                " Celsius (77 degrees Fahrenheit)."
-            ),
-        }
-    else:
-        return {
-            "status": "error",
-            "error_message": f"Weather information for '{city}' is not available.",
-        }
-
-
-def get_current_time(city: str) -> dict:
-    """Returns the current time in a specified city.
-
-    Args:
-        city (str): The name of the city for which to retrieve the current time.
-
-    Returns:
-        dict: status and result or error msg.
-    """
-
-    if city.lower() == "new york":
-        tz_identifier = "America/New_York"
-    else:
-        return {
-            "status": "error",
-            "error_message": (
-                f"Sorry, I don't have timezone information for {city}."
-            ),
-        }
-
-    tz = ZoneInfo(tz_identifier)
-    now = datetime.datetime.now(tz)
-    report = (
-        f'The current time in {city} is {now.strftime("%Y-%m-%d %H:%M:%S %Z%z")}'
-    )
-    return {"status": "success", "report": report}
-
+from .tools import create_ticket
 
 opik_tracer = OpikTracer()
 
 root_agent = Agent(
-    name="weather_time_agent",
+    name="aigis",
     model="gemini-2.0-flash",
     description=(
-        "Agent to answer questions about the time and weather in a city."
+        "Agent that listens to manager-employee conversations and decides whether he should create a jira task"
     ),
     instruction=(
-        "You are a helpful agent who can answer user questions about the time and weather in a city."
+        """
+        You are a silent agent that listens to managers talking to employees and creates tasks when the manager asks something of the employee.
+        You can use the create_ticket tool to create Jira tasks.
+        IF you detect a request being made that could become a Jira task, create a Jira task for it and respond ONLY with SUCCESS
+        ELSE respond ONLY with the error_message
+        """
     ),
-    tools=[get_weather, get_current_time],
+    tools=[create_ticket],
     before_agent_callback=opik_tracer.before_agent_callback,
     after_agent_callback=opik_tracer.after_agent_callback,
     before_model_callback=opik_tracer.before_model_callback,

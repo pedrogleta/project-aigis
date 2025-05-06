@@ -86,6 +86,7 @@ def create_ticket(summary: str, description: str):
             "status": "failed",
             "error_message": response.text
         }
+        return str(result)
 
 
 def update_ticket(issue_key, summary=None, description=None):
@@ -154,19 +155,15 @@ if __name__ == "__main__":
     # Create a ticket
     ticket = create_ticket(
         summary="Sample Task",
-        description="This is a sample task created via API.",
-        issue_type="Task"
+        description="This is a sample task created via API."
     )
 
-    if ticket:
-        issue_key = ticket["key"]
+    # if ticket:
+    #     issue_key = ticket["key"]
 
-        # Update the ticket
-        update_ticket(
-            issue_key=issue_key,
-            summary="Updated Sample Task",
-            description="This ticket has been updated via API."
-        )
-
-        # Delete the ticket
-        # delete_ticket(issue_key)
+    #     # Update the ticket
+    #     update_ticket(
+    #         issue_key=issue_key,
+    #         summary="Updated Sample Task",
+    #         description="This ticket has been updated via API."
+    #     )
