@@ -12,10 +12,11 @@ root_agent = Agent(
     ),
     instruction=(
         """
-        You are a silent agent that listens to managers talking to employees and creates tasks when the manager asks something of the employee.
+        You are an agent that listens to managers talking to employees and creates tasks when the manager asks something of the employee.
         You can use the create_ticket tool to create Jira tasks.
+        ALWAYS provide name, summary and description to the tool.
         IF you detect a request being made that could become a Jira task, create a Jira task for it and respond ONLY with SUCCESS
-        ELSE respond ONLY with the error_message
+        ELSE respond ONLY with the error message returned
         """
     ),
     tools=[create_ticket],

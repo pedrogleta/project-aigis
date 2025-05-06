@@ -3,6 +3,7 @@ from requests.auth import HTTPBasicAuth
 import json
 import os
 from dotenv import load_dotenv
+from difflib import SequenceMatcher
 
 
 load_dotenv()
@@ -23,11 +24,33 @@ headers = {
 }
 
 
-def create_ticket(summary: str, description: str):
+ALL_TEAM_MEMBER_NAMES = ["Pedro Leta"]
+
+
+def find_team_member_by_name(name: str):
+    most_likely = ''
+    most_likely_ratio = 0
+    for full_name in ALL_TEAM_MEMBER_NAMES:
+        if SequenceMatcher(None, name, full_name).ratio() > most_likely_ratio:
+            most_likely = full_name
+            most_likely_ratio = SequenceMatcher(
+                None, name, full_name).ratio()
+    return most_likely
+
+
+def find_id_by_name(name: str):
+    team_member = find_team_member_by_name(name)
+    if team_member == 'Pedro Leta':
+        return "5ee7be561b849f0ac0904590"
+    return ''
+
+
+def create_ticket(summary: str, description: str, name: str):
     """
     Creates a new ticket in the specified Jira project.
 
     Args:
+        name (str): The name of the person that will do the task.
         summary (str): The title of the task.
         description (str): The description of the task.
 
@@ -61,6 +84,9 @@ def create_ticket(summary: str, description: str):
             },
             "issuetype": {
                 "name": "Task"
+            },
+            "assignee": {
+                "id": find_id_by_name(name)
             }
         }
     }
