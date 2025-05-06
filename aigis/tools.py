@@ -23,9 +23,20 @@ headers = {
 }
 
 
-def create_ticket(summary, description, issue_type="Task"):
+def create_ticket(summary: str, description: str):
     """
-    Create a new ticket in the specified Jira project.
+    Creates a new ticket in the specified Jira project.
+
+    Args:
+        summary (str): The title of the task.
+        description (str): The description of the task.
+
+    Returns:
+        str: A JSON string with the status of the call and an error_message if the call failed
+
+    Example:
+        >>> create_ticket(summary='Add CSV Import Support', description='Add support for users to import leads via csv in the Dashboard. The csv file should be parsed and validated.')
+        '{"status": "success"}'
     """
     payload = {
         "fields": {
@@ -49,7 +60,7 @@ def create_ticket(summary, description, issue_type="Task"):
                 ]
             },
             "issuetype": {
-                "name": issue_type
+                "name": "Task"
             }
         }
     }
@@ -63,11 +74,18 @@ def create_ticket(summary, description, issue_type="Task"):
 
     if response.status_code == 201:
         print(f"Ticket created: {response.json()['key']}")
-        return response.json()
+        print(response.json())
+        result = {
+            "status": "success"
+        }
+        return str(result)
     else:
         print(
             f"Failed to create ticket: {response.status_code} - {response.text}")
-        return None
+        result = {
+            "status": "failed",
+            "error_message": response.text
+        }
 
 
 def update_ticket(issue_key, summary=None, description=None):
