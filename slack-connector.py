@@ -27,29 +27,104 @@ def handle_message_events(body, say, logger):
             blocks=[
                 {
                     "type": "section",
-                    "text": {"type": "mrkdwn", "text": f"Hey there <@{body['event']['user']}>!"},
-                    "accessory": {
-                        "type": "button",
-                        "text": {"type": "plain_text", "text": "Click Me"},
-                        "action_id": "button_click"
+                    "text": {
+                            "type": "mrkdwn",
+                            "text": "Gostaria de criar uma tarefa para o funcionário Marcelo?"
                     }
+                },
+                {
+                    "type": "actions",
+                    "elements": [
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Sim",
+                                    "emoji": True
+                                },
+                                "style": "primary",
+                                "action_id": "create_task"
+                            },
+                        {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Não",
+                                    "emoji": True
+                                },
+                                "style": "danger",
+                                "action_id": "stop"
+                                }
+                    ]
                 }
             ],
-            text=f"Hey there <@{body['event']['user']}>!"
+            text=f"oiiii"
         )
 
 
-@app.action("button_click")
-def handle_button_click(ack, body, say):
+@app.action("create_task")
+def handle_create_task(ack, body, say):
     ack()
     say(
         blocks=[
             {
                 "type": "section",
-                "text": {"type": "mrkdwn", "text": f"Button clicked by <@{body['user']['id']}>!"}
+                "text": {
+                        "type": "mrkdwn",
+                    "text": "Tarefa criada com sucesso!"
+                }
+            },
+            {
+                "type": "section",
+                "text": {
+                        "type": "mrkdwn",
+                    "text": "Gostaria de adicionar um envento ao calendário para conferir o progresso em uma semana?"
+                }
+            },
+            {
+                "type": "actions",
+                "elements": [
+                        {
+                            "type": "button",
+                            "text": {
+                                    "type": "plain_text",
+                                    "text": "Sim",
+                                    "emoji": True
+                            },
+                            "style": "primary",
+                            "action_id": "create_calendar_event"
+                        },
+                    {
+                            "type": "button",
+                            "text": {
+                                    "type": "plain_text",
+                                    "text": "Não",
+                                    "emoji": True
+                            },
+                            "style": "danger",
+                            "action_id": "no_action"
+                        }
+                ]
             }
         ],
-        text=f"Button clicked by <@{body['user']['id']}>!"
+        text=f"oiiii"
+    )
+
+
+@app.action("create_calendar_event")
+def handle_create_event(ack, body, say):
+    ack()
+    say(
+        blocks=[
+            {
+                "type": "section",
+                "text": {
+                        "type": "mrkdwn",
+                    "text": "Adicionado ao calendário!"
+                }
+            }
+        ],
+        text=f"oiiii"
     )
 
 
