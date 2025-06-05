@@ -8,10 +8,10 @@ from difflib import SequenceMatcher
 
 load_dotenv()
 
-JIRA_URL = os.getenv("JIRA_URL")
-JIRA_EMAIL = os.getenv("JIRA_EMAIL")
-JIRA_API_TOKEN = os.getenv("JIRA_API_TOKEN")
-JIRA_PROJECT_KEY = os.getenv("JIRA_PROJECT_KEY")
+JIRA_URL = os.getenv("JIRA_URL") or ''
+JIRA_EMAIL = os.getenv("JIRA_EMAIL") or ''
+JIRA_API_TOKEN = os.getenv("JIRA_API_TOKEN") or ''
+JIRA_PROJECT_KEY = os.getenv("JIRA_PROJECT_KEY") or ''
 
 
 BASE_URL = f"{JIRA_URL}/rest/api/3"
@@ -181,7 +181,8 @@ if __name__ == "__main__":
     # Create a ticket
     ticket = create_ticket(
         summary="Sample Task",
-        description="This is a sample task created via API."
+        description="This is a sample task created via API.",
+        name="Pedro Leta"
     )
 
     # if ticket:
