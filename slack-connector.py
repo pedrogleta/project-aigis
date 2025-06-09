@@ -22,6 +22,10 @@ def handle_message_events(body, say, logger):
     print('mensagem: ', body['event']['text'])
     message = body['event']['text']
 
+    # Call AI
+
+    # Get params for creating jira ticket
+
     if 'hello' in message:
         say(
             blocks=[
@@ -43,7 +47,8 @@ def handle_message_events(body, say, logger):
                                     "emoji": True
                                 },
                                 "style": "primary",
-                                "action_id": "create_task"
+                                "action_id": "create_task",
+                                "value": "STRINGIFIED JSON"
                             },
                         {
                                 "type": "button",
@@ -65,6 +70,9 @@ def handle_message_events(body, say, logger):
 @app.action("create_task")
 def handle_create_task(ack, body, say):
     ack()
+
+    print(body['actions'][0]['value'])
+
     say(
         blocks=[
             {

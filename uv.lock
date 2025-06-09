@@ -1514,7 +1514,7 @@ requires-dist = [
     { name = "boto3-stubs", specifier = "==1.38.9" },
     { name = "botocore-stubs", specifier = "==1.38.9" },
     { name = "cachetools", specifier = "==5.5.2" },
-    { name = "certifi", specifier = "==2025.4.26" },
+    { name = "certifi", specifier = ">=2025.4.26" },
     { name = "cffi", specifier = "==1.17.1" },
     { name = "charset-normalizer", specifier = "==3.4.2" },
     { name = "click", specifier = "==8.1.8" },
