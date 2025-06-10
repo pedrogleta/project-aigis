@@ -42,6 +42,8 @@ def find_id_by_name(name: str):
     team_member = find_team_member_by_name(name)
     if team_member == 'Pedro Leta':
         return "5ee7be561b849f0ac0904590"
+    if team_member == 'Marcelo Gabriel':
+        return "600f653065f20b0070ab2def"
     return ''
 
 
