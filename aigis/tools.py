@@ -24,7 +24,7 @@ headers = {
 }
 
 
-ALL_TEAM_MEMBER_NAMES = ["Pedro Leta"]
+ALL_TEAM_MEMBER_NAMES = ["Pedro Leta", "Marcelo Gabriel"]
 
 
 def find_team_member_by_name(name: str):

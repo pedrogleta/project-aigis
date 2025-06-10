@@ -15,7 +15,7 @@ requests.post(
 def parse_ai_response(ai_response: str) -> str:
     data = json.loads(ai_response)
     result: str = data[0]['content']['parts'][0]['text']
-    return result.replace('```json', '').replace('```', '').replace('\n', '').strip()
+    return result.replace('```json', '').replace('```', '').replace('\n', '').replace('\'', '\"').strip()
 
 
 def talk_to_agent(message: str) -> str:
