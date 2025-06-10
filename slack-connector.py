@@ -1,6 +1,10 @@
 import os
+import json
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
+from services import talk_to_agent
+from aigis.tools import create_ticket
+
 # import logging
 from dotenv import load_dotenv
 
@@ -22,49 +26,54 @@ def handle_message_events(body, say, logger):
     print('mensagem: ', body['event']['text'])
     message = body['event']['text']
 
-    # Call AI
+    agent_response = talk_to_agent(message)
 
-    # Get params for creating jira ticket
+    print('agent response:')
+    print(agent_response)
 
-    if 'hello' in message:
-        say(
-            blocks=[
-                {
-                    "type": "section",
-                    "text": {
-                            "type": "mrkdwn",
-                            "text": "Gostaria de criar uma tarefa para o funcionário Marcelo?"
-                    }
-                },
-                {
-                    "type": "actions",
-                    "elements": [
-                            {
-                                "type": "button",
-                                "text": {
-                                    "type": "plain_text",
-                                    "text": "Sim",
-                                    "emoji": True
-                                },
-                                "style": "primary",
-                                "action_id": "create_task",
-                                "value": "STRINGIFIED JSON"
-                            },
-                        {
-                                "type": "button",
-                                "text": {
-                                    "type": "plain_text",
-                                    "text": "Não",
-                                    "emoji": True
-                                },
-                                "style": "danger",
-                                "action_id": "stop"
-                                }
-                    ]
+    if agent_response == 'IGNORED':
+        return
+
+    owner = json.loads(agent_response)['owner']
+
+    say(
+        blocks=[
+            {
+                "type": "section",
+                "text": {
+                        "type": "mrkdwn",
+                        "text": f"Gostaria de criar uma tarefa para o funcionário {owner}?"
                 }
-            ],
-            text=f"oiiii"
-        )
+            },
+            {
+                "type": "actions",
+                "elements": [
+                        {
+                            "type": "button",
+                            "text": {
+                                "type": "plain_text",
+                                "text": "Sim",
+                                "emoji": True
+                            },
+                            "style": "primary",
+                            "action_id": "create_task",
+                            "value": agent_response
+                        },
+                    {
+                            "type": "button",
+                            "text": {
+                                "type": "plain_text",
+                                "text": "Não",
+                                "emoji": True
+                            },
+                            "style": "danger",
+                            "action_id": "stop"
+                    }
+                ]
+            }
+        ],
+        text=f"oiiii"
+    )
 
 
 @app.action("create_task")
@@ -72,6 +81,10 @@ def handle_create_task(ack, body, say):
     ack()
 
     print(body['actions'][0]['value'])
+    data = json.loads(body['actions'][0]['value'])
+
+    create_ticket(summary=data['summary'],
+                  description=data['description'], name=data['owner'])
 
     say(
         blocks=[
@@ -81,38 +94,6 @@ def handle_create_task(ack, body, say):
                         "type": "mrkdwn",
                     "text": "Tarefa criada com sucesso!"
                 }
-            },
-            {
-                "type": "section",
-                "text": {
-                        "type": "mrkdwn",
-                    "text": "Gostaria de adicionar um envento ao calendário para conferir o progresso em uma semana?"
-                }
-            },
-            {
-                "type": "actions",
-                "elements": [
-                        {
-                            "type": "button",
-                            "text": {
-                                    "type": "plain_text",
-                                    "text": "Sim",
-                                    "emoji": True
-                            },
-                            "style": "primary",
-                            "action_id": "create_calendar_event"
-                        },
-                    {
-                            "type": "button",
-                            "text": {
-                                    "type": "plain_text",
-                                    "text": "Não",
-                                    "emoji": True
-                            },
-                            "style": "danger",
-                            "action_id": "no_action"
-                        }
-                ]
             }
         ],
         text=f"oiiii"

@@ -12,10 +12,10 @@ requests.post(
 )
 
 
-# def parse_ai_response(ai_response: str) -> str:
-#     data = json.loads(ai_response)
-#     result = data[0]['content']['parts'][0]['text']
-#     return result
+def parse_ai_response(ai_response: str) -> str:
+    data = json.loads(ai_response)
+    result: str = data[0]['content']['parts'][0]['text']
+    return result.replace('```json', '').replace('```', '').replace('\n', '').strip()
 
 
 def talk_to_agent(message: str) -> str:
@@ -37,7 +37,8 @@ def talk_to_agent(message: str) -> str:
         }
     )
 
-    return response.text
+    return parse_ai_response(response.text)
 
 
-print(talk_to_agent('Pedro, faz um favor pra mim, identifica os agentes comerciais que estão com a maior performance essa semana e monta uma lista pra mim'))
+# print(talk_to_agent('Pedro, faz um favor pra mim, identifica os agentes comerciais que estão com a maior performance essa semana e monta uma lista pra mim'))
+# print(talk_to_agent('bom dia meus amigos!'))

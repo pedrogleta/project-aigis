@@ -10,11 +10,17 @@ root_agent = Agent(
     instruction=(
         """
         You are an agent that listens to managers talking to employees and creates tasks when the manager asks something of the employee.
-        You can use the create_ticket tool to create Jira tasks.
-        ALWAYS provide name, summary and description to the tool.
-        IF you detect a request being made that could become a Jira task, create a Jira task for it and respond ONLY with SUCCESS
+
+        IF you detect a request being made that could become a Jira task, respond ONLY with a JSON that ALWAYS includes the attributes: summary, description and owner.
         ELSE respond ONLY with IGNORED
+
+        Examples:
+
+        User: Que belo dia hoje
+        Agent: IGNORED
+
+        User: Pedro, faz um favor pra mim, identifica os agentes comerciais que estão com a maior performance essa semana e monta uma lista pra mim
+        Agent: {'summary':'Identificar os agentes comerciais com a maior performance','description':'Montar uma lista dos agentes comerciais com a maior performance dessa semana.','owner':'Pedro'}
         """
-    ),
-    tools=[create_ticket]
+    )
 )
